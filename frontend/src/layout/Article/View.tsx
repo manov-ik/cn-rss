@@ -1,4 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
+import clsx from "clsx";
 import { ArticleDetail } from "@/components/ArticleView/Detail";
 import { ScrollBox, ScrollBoxRefObject } from "@/components/ArticleView/ScrollBox";
 import { useRef } from "react";
@@ -9,7 +10,9 @@ import { PlayerSwitcher } from "@/components/PodcastPlayer/PlayerSwitch";
 import { IconButton, Separator } from "@radix-ui/themes";
 import { useTranslation } from "react-i18next";
 import { ArticleResItem } from "@/db";
-import { X } from "lucide-react";
+import { X, ChevronLeft } from "lucide-react";
+import { useBearStore } from "@/stores";
+import { useShallow } from "zustand/react/shallow";
 
 export interface ArticleViewProps {
   article: ArticleResItem | null;
@@ -21,6 +24,11 @@ export interface ArticleViewProps {
 
 export function View(props: ArticleViewProps) {
   const { t } = useTranslation();
+  const store = useBearStore(
+    useShallow((state) => ({
+      setArticle: state.setArticle,
+    }))
+  );
 
   const renderPlaceholder = () => {
     return (
@@ -50,19 +58,33 @@ export function View(props: ArticleViewProps) {
   const scrollBoxRef = useRef<ScrollBoxRefObject>(null);
 
   return (
-    <div className="flex-1 min-w-0">
+    <div className={clsx("flex-1 min-w-0 bg-panel border-l", props.article ? "flex flex-col w-full h-full" : "hidden md:flex flex-col")}>
       <div
         className={
-          "h-[var(--app-toolbar-height)] flex items-center justify-end px-3 gap-2 border-b relative z-10 shrink-0"
+          "h-[var(--app-toolbar-height)] flex items-center justify-between px-3 gap-2 border-b relative z-10 shrink-0"
         }
       >
-        {props.article && (
-          <>
-            <StarAndRead article={props.article} />
-            <Separator orientation={"vertical"} className="mx-1" />
-          </>
-        )}
-        {props.goNext && props.goPrev && (
+        <div className="flex items-center gap-2">
+          {props.article && (
+            <IconButton
+              size="2"
+              variant="ghost"
+              color="gray"
+              className="md:hidden text-[var(--gray-12)] mr-1 cursor-pointer"
+              onClick={() => store.setArticle(null)}
+            >
+              <ChevronLeft size={16} />
+            </IconButton>
+          )}
+          {props.article && (
+            <>
+              <StarAndRead article={props.article} />
+              <Separator orientation={"vertical"} className="mx-1" />
+            </>
+          )}
+        </div>
+        <div className="flex items-center gap-2">
+          {props.goNext && props.goPrev && (
           <>
             <ToolbarItemNavigator goNext={props.goNext} goPrev={props.goPrev} />
             <Separator orientation="vertical" className="mx-1" />
@@ -85,6 +107,7 @@ export function View(props: ArticleViewProps) {
             </IconButton>
           </>
         )}
+        </div>
       </div>
       <AnimatePresence>
         <motion.article

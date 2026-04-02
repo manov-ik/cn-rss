@@ -4,7 +4,7 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import clsx from "clsx";
 import { useTranslation } from "react-i18next";
-import { Search, PlusCircle, Settings, FolderPlus, RotateCw } from "lucide-react";
+import { Search, PlusCircle, Settings, FolderPlus, RotateCw, X } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
 import { ChannelList } from "../../components/Subscribes";
 import { useBearStore } from "@/stores";
@@ -38,8 +38,15 @@ export const LocalPage = React.memo(function () {
       getSubscribes: state.getSubscribes,
 
       globalSyncStatus: state.globalSyncStatus,
+      feed: state.feed,
+      mobileSidebarOpen: state.mobileSidebarOpen,
+      updateMobileSidebarOpen: state.updateMobileSidebarOpen,
     })),
   );
+
+  React.useEffect(() => {
+    store.updateMobileSidebarOpen(false);
+  }, [store.feed]);
 
   console.log("Hooks: useRefresh-LocalPage-rendered");
 
@@ -47,14 +54,26 @@ export const LocalPage = React.memo(function () {
   const { startRefresh } = useRefresh();
 
   return (
-    <div className="flex flex-row h-full bg-canvas">
+    <div className="flex flex-row h-full bg-canvas relative">
       <div
-        className="py-2 relative flex h-full w-[var(--app-feedlist-width)] select-none flex-col text-[hsl(var(--foreground))]
-  "
+        className={clsx(
+          "py-2 relative h-full select-none flex-col text-[hsl(var(--foreground))] md:w-[var(--app-feedlist-width)]",
+          store.mobileSidebarOpen ? "flex w-full z-20" : "hidden md:flex",
+        )}
       >
         <div className=" flex h-[var(--app-toolbar-height)] items-center justify-between bg-[var(--background)] pl-2 pr-3 pt-2">
           <SpaceSwitcher isCollapsed={false} spaces={spaces} />
-          <div className="flex items-center gap-3">
+
+          <div className="flex items-center gap-2">
+            <IconButton
+              size="2"
+              variant="ghost"
+              color="gray"
+              className="md:hidden text-[var(--gray-12)] cursor-pointer"
+              onClick={() => store.updateMobileSidebarOpen(false)}
+            >
+              <X size={16} />
+            </IconButton>
             <AddFolder
               action="add"
               dialogStatus={addFolderDialogStatus}
@@ -113,7 +132,11 @@ export const LocalPage = React.memo(function () {
         </DndProvider>
       </div>
 
-      <Outlet />
+      <div
+        className={clsx("flex-1 h-full min-w-0 overflow-hidden", store.mobileSidebarOpen ? "hidden md:flex" : "flex")}
+      >
+        <Outlet />
+      </div>
     </div>
   );
 });

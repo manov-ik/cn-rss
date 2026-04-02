@@ -12,7 +12,8 @@ import {
   ArticleListVirtualRefType,
 } from "@/components/ArticleListVirtual";
 import { useBearStore } from "@/stores";
-import { CheckCheck, RotateCw, Rss, Link } from "lucide-react";
+import { CheckCheck, RotateCw, Rss, Link, Menu } from "lucide-react";
+import clsx from "clsx";
 import { useArticle } from "./useArticle";
 import { loadFeed } from "@/hooks/useLoadFeed";
 import { ArticleReadStatus } from "@/typing";
@@ -62,6 +63,7 @@ export const ArticleCol = React.memo(
           setFilter: state.setFilter,
 
           userConfig: state.userConfig,
+          updateMobileSidebarOpen: state.updateMobileSidebarOpen,
         })),
       );
 
@@ -337,7 +339,7 @@ export const ArticleCol = React.memo(
       useHotkeys("Shift+n", goPrev);
 
       return (
-        <div className="w-[var(--app-article-width)] border-r flex flex-col h-full">
+        <div className={clsx("border-r flex-col h-full", "md:w-[var(--app-article-width)] md:flex", store.article ? "hidden" : "w-full flex")}>
           <div className="h-[var(--app-toolbar-height)] grid grid-cols-[auto_1fr] items-center justify-between border-b shrink-0">
             <div
               className="
@@ -349,8 +351,18 @@ export const ArticleCol = React.memo(
             overflow-hidden
             whitespace-nowrap
             text-article-headline
+            flex items-center gap-2
           "
             >
+              <IconButton
+                size="2"
+                variant="ghost"
+                color="gray"
+                className="md:hidden text-[var(--gray-12)] cursor-pointer"
+                onClick={() => store.updateMobileSidebarOpen(true)}
+              >
+                <Menu size={16} />
+              </IconButton>
               {renderLabel()}
             </div>
             <div className={"flex items-center justify-end px-2 gap-x-3"}>

@@ -26,6 +26,9 @@ export interface UserConfigSlice {
   updateAboutDialogStatus: (status: boolean) => void;
   appMetadata: any;
   updateAppMetadata: (metadata: any) => void;
+
+  mobileSidebarOpen: boolean;
+  updateMobileSidebarOpen: (status: boolean) => void;
 }
 
 export const createUserConfigSlice: StateCreator<UserConfigSlice> = (
@@ -109,6 +112,13 @@ export const createUserConfigSlice: StateCreator<UserConfigSlice> = (
   updateAppMetadata: (metadata: any) => {
     set(() => ({
       appMetadata: metadata,
+    }));
+  },
+
+  mobileSidebarOpen: false,
+  updateMobileSidebarOpen: (status: boolean) => {
+    set(() => ({
+      mobileSidebarOpen: status,
     }));
   },
 });

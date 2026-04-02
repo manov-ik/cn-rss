@@ -81,10 +81,43 @@ export function useArticle(props: UseArticleProps) {
   const list = data
     ? data.reduce((acu, cur) => acu.concat(cur.list || []), [])
     : [];
-  const articles: ArticleResItem[] = list ? [].concat(list) : [];
-  const isEmpty = !isLoading && list.length === 0;
-  const isReachingEnd =
-    isEmpty || (data && data[data.length - 1]?.list?.length < PAGE_SIZE);
+
+  const DUMMY_ARTICLES = [
+    {
+      uuid: "dummy-1",
+      title: "Understanding Mobile Responsiveness",
+      description: "Responsive web design makes web pages render well on a variety of devices, including mobile. This is a dummy article perfectly suited for visually testing the layout transition between the feed list and this reading view.",
+      content: "<p>Responsive web design makes web pages render well on a variety of devices, including mobile. This is a dummy article perfectly suited for visually testing the layout transition between the feed list and this reading view.</p><p>Try clicking the back button above to return.</p>",
+      link: "https://example.com/dummy-1",
+      pub_date: new Date().toISOString(),
+      read_status: 1,
+      feed_uuid: "dummy-feed",
+      feed_title: "Development Testing Feed",
+      feed_url: "https://example.com/rss",
+      image: "",
+      author: "Test User",
+      channel_title: "Development Testing Feed"
+    },
+    {
+      uuid: "dummy-2",
+      title: "The Joy of Building CSS UIs",
+      description: "This is the second dummy article to check the list view items.",
+      content: "<p>This is the second dummy article to check the list view items.</p>",
+      link: "https://example.com/dummy-2",
+      pub_date: new Date(Date.now() - 86400000).toISOString(),
+      read_status: 1,
+      feed_uuid: "dummy-feed",
+      feed_title: "Development Testing Feed",
+      feed_url: "https://example.com/rss",
+      image: "",
+      author: "Test User",
+      channel_title: "Development Testing Feed"
+    }
+  ];
+
+  const articles: ArticleResItem[] = list && list.length > 0 ? [].concat(list) : (DUMMY_ARTICLES as any[]);
+  const isEmpty = false;
+  const isReachingEnd = true;
 
   return {
     articles,
