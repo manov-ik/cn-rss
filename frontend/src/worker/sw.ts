@@ -15,9 +15,7 @@ export type Version = number;
 
 const version: Version = 0;
 
-if (process.env.NODE_ENV === "development") {
-  console.debug({ version });
-}
+// Removed debug block because Vite injects invalid `import.meta.env = ...` assignment.
 
 // NOTE: The default context is just Worker and we need to be the more specific ServiceWorker
 declare let self: ServiceWorkerGlobalScope;

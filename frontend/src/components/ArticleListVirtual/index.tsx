@@ -90,9 +90,7 @@ export const ArticleListVirtual = React.memo(
         ) : (
           <ul className="py-1 px-1 list-none m-0 flex flex-col gap-1">
             {articles.map((article, index) => (
-              <li key={`${article.uuid}-${index}`}>
-                <ArticleItem article={article} />
-              </li>
+              <ArticleItem key={`${article.uuid}-${index}`} article={article} />
             ))}
           </ul>
         )}

@@ -34,7 +34,6 @@ import { CollectionMeta } from "./CollectionMeta";
 import { useTranslation } from "react-i18next";
 
 const ChannelList = (): JSX.Element => {
-  console.log("ChannelList rendered");
   const { t } = useTranslation();
   const isToday = useMatch(RouteConfig.LOCAL_TODAY);
   const isAll = useMatch(RouteConfig.LOCAL_ALL);

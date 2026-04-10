@@ -27,9 +27,6 @@ module.exports = {
         "2xl": "1400px",
       },
     },
-    colors: ({ colors }) => ({
-      ...colors,
-    }),
     extend: {
       colors: {
         ...blackA,
@@ -133,5 +130,5 @@ module.exports = {
       },
     },
   },
-  plugins: [require("@tailwindcss/line-clamp"), require("@tailwindcss/typography"), require("tailwindcss-animate")],
+  plugins: [require("@tailwindcss/typography"), require("tailwindcss-animate")],
 };

@@ -48,7 +48,6 @@ export const LocalPage = React.memo(function () {
     store.updateMobileSidebarOpen(false);
   }, [store.feed]);
 
-  console.log("Hooks: useRefresh-LocalPage-rendered");
 
   const [addFolderDialogStatus, setAddFolderDialogStatus] = useState(false);
   const { startRefresh } = useRefresh();

@@ -13,13 +13,13 @@ export function loadFeed(
     id: toastId,
   });
 
-  requester(feed)
-    .then((res) => {
-      const [uuid, [title, num, message]] = Object.entries(res)[0] as [
-        string,
-        [string, number, string],
-      ];
-      if (message) {
+    requester(feed)
+      .then((res) => {
+        const title = feed.title;
+        const num = res.newArticles || 0;
+        const message = res.error;
+
+        if (message) {
         toast.error(i18next.t("Ops! Something wrong~"), {
           id: toastId,
           description: message,

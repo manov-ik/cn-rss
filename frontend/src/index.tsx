@@ -4,7 +4,6 @@ import {
   Navigate,
   RouterProvider,
 } from "react-router-dom";
-import { Toaster } from "sonner";
 
 
 import reportWebVitals from "./reportWebVitals";
@@ -24,7 +23,6 @@ const router = createBrowserRouter([
     element: (
       <>
         <App />
-        <Toaster />
       </>
     ),
     errorElement: <ErrorPage />,

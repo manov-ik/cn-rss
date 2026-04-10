@@ -97,18 +97,18 @@ export const subscribeFeed = async (
 export const syncFeed = async (
   feed_type: string,
   uuid: string,
-): Promise<AxiosResponse<{ [key: string]: [string, number, string] }>> => {
-  return request.get(`/feeds/${uuid}/sync`, {
+): Promise<{ synced: boolean; newArticles: number; error?: string }> => {
+  return request.get(`feeds/${uuid}/sync`, {
     params: {
       feed_type,
     },
-  });
+  }).then((res) => res.data);
 };
 
 export const getUnreadTotal = async (): Promise<
   AxiosResponse<{ [key: string]: number }>
 > => {
-  return request.get("unread-total");
+  return request.get("articles/unread-total");
 };
 
 export const getCollectionMetas = async (): Promise<
@@ -116,7 +116,7 @@ export const getCollectionMetas = async (): Promise<
     [key: string]: number;
   }>
 > => {
-  return request.get("collection-metas");
+  return request.get("articles/collection-metas");
 };
 
 export const updateArticleReadStatus = async (
@@ -142,7 +142,7 @@ export const markAllRead = async (body: {
   isToday?: boolean;
   isAll?: boolean;
 }): Promise<AxiosResponse<number>> => {
-  return request.post("/mark-all-as-read", body);
+  return request.post("articles/mark-all-as-read", body);
 };
 
 export const getUserConfig = async (): Promise<any> => {
@@ -179,7 +179,7 @@ export const getArticleDetail = async (
 export const getBestImage = async (
   url: String,
 ): Promise<AxiosResponse<string>> => {
-  return request.get("image-proxy", {
+  return request.get("articles/image-proxy", {
     params: {
       url,
     },
@@ -189,7 +189,7 @@ export const getBestImage = async (
 export const getPageSources = async (
   url: string,
 ): Promise<AxiosResponse<string>> => {
-  return request.get("article-proxy", {
+  return request.get("articles/article-proxy", {
     params: {
       url,
     },

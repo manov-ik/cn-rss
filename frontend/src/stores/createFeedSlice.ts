@@ -270,7 +270,10 @@ export const createFeedSlice: StateCreator<FeedSlice> = (
     const limit = pLimit(5);
     const fns = (children?.length > 0 ? children : [{ ...feed }]).map((_) => {
       return limit(() => {
-        return dataAgent.syncFeed("feed", _.uuid);
+        return dataAgent.syncFeed("feed", _.uuid).then((res) => ({
+          uuid: _.uuid,
+          data: res,
+        }));
       });
     });
 
@@ -278,31 +281,29 @@ export const createFeedSlice: StateCreator<FeedSlice> = (
 
     return Promise.all(fns)
       .then((resList) => {
-        const map = resList.reduce((acu, { data }) => {
-          const [[uuid, values] = []] = Object.entries(data);
-
-          if (uuid && values) {
-            acu[uuid] = values;
+        const map = resList.reduce((acu, { uuid, data }) => {
+          if (uuid && data && !data.error) {
+            acu[uuid] = data.newArticles || 0;
           }
 
           return acu;
-        }, {} as { [key: string]: any });
+        }, {} as { [key: string]: number });
         let list = get().subscribes.map((_) => {
-          if (map[_.uuid]) {
-            _.unread += map[_.uuid][1];
+          if (map[_.uuid] !== undefined) {
+            _.unread += map[_.uuid];
 
-            collectionMeta.today.unread += map[_.uuid][1];
-            collectionMeta.total.unread += map[_.uuid][1];
+            collectionMeta.today.unread += map[_.uuid];
+            collectionMeta.total.unread += map[_.uuid];
           }
 
           if (_.children) {
             _.children.forEach((child) => {
-              if (map[child.uuid]) {
-                child.unread += map[child.uuid][1];
-                _.unread += map[child.uuid][1];
+              if (map[child.uuid] !== undefined) {
+                child.unread += map[child.uuid];
+                _.unread += map[child.uuid];
 
-                collectionMeta.today.unread += map[child.uuid][1];
-                collectionMeta.total.unread += map[child.uuid][1];
+                collectionMeta.today.unread += map[child.uuid];
+                collectionMeta.total.unread += map[child.uuid];
               }
             });
           }

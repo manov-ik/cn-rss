@@ -1,18 +1,14 @@
 import axios from "axios";
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 
-const port = window.localStorage.getItem("port");
-
 const env = import.meta.env;
 
-if (env.DEV) {
-  axios.defaults.baseURL = `http://localhost:${port}/api`;
-} else {
-  axios.defaults.baseURL = `http://localhost:${port}/api`;
-}
+const BASE_URL = env.VITE_API_URL || "/api";
+
+axios.defaults.baseURL = BASE_URL;
 
 export const createInstance = (config: AxiosRequestConfig): AxiosInstance => {
-  axios.defaults.baseURL = `http://localhost:${port}/api`;
+  axios.defaults.baseURL = BASE_URL;
   return axios.create(config);
 };
 

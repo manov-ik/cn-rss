@@ -21,7 +21,6 @@ import { useShallow } from "zustand/react/shallow";
  * ```
  */
 export const useRefresh = () => {
-  console.log("Hooks: useRefresh2 called");
 
   const store = useBearStore(
     useShallow((state) => ({
